@@ -2,47 +2,61 @@ from __future__ import annotations
 
 from typing import Any
 
-from word_bank.db import get_connection, init_db
+from word_bank.auth import get_current_user
+from word_bank.db import get_connection
 from word_bank.db.schema import TABLES
 
 
 def _rows_to_dicts(rows: list) -> list[dict[str, Any]]:
-    return [dict(row) for row in rows]
+    return rows  # get_connection já retorna dicts
 
 
 def _fetch_all(table: str) -> list[dict[str, Any]]:
+    uid = get_current_user()
     with get_connection() as conn:
-        rows = conn.execute(f"SELECT * FROM {table} ORDER BY id").fetchall()
-    return _rows_to_dicts(rows)
+        rows = conn.execute(
+            f"SELECT * FROM {table} WHERE user_id = %s ORDER BY id", (uid,)
+        ).fetchall()
+    return rows
 
 
 def _insert(table: str, data: dict[str, Any]) -> None:
-    columns = ", ".join(data.keys())
-    placeholders = ", ".join("?" * len(data))
+    uid = get_current_user()
+    payload = {"user_id": uid, **data}
+    columns = ", ".join(payload.keys())
+    placeholders = ", ".join(["%s"] * len(payload))
     with get_connection() as conn:
         conn.execute(
             f"INSERT INTO {table} ({columns}) VALUES ({placeholders})",
-            tuple(data.values()),
+            tuple(payload.values()),
         )
 
 
 def _update(table: str, row_id: int, data: dict[str, Any]) -> None:
-    assignments = ", ".join(f"{col} = ?" for col in data)
+    uid = get_current_user()
+    assignments = ", ".join(f"{col} = %s" for col in data)
     with get_connection() as conn:
         conn.execute(
-            f"UPDATE {table} SET {assignments} WHERE id = ?",
-            (*data.values(), row_id),
+            f"UPDATE {table} SET {assignments} WHERE id = %s AND user_id = %s",
+            (*data.values(), row_id, uid),
         )
 
 
 def _delete(table: str, row_id: int) -> None:
+    uid = get_current_user()
     with get_connection() as conn:
-        conn.execute(f"DELETE FROM {table} WHERE id = ?", (row_id,))
+        conn.execute(
+            f"DELETE FROM {table} WHERE id = %s AND user_id = %s", (row_id, uid)
+        )
 
 
 def count_rows(table: str) -> int:
+    uid = get_current_user()
     with get_connection() as conn:
-        return conn.execute(f"SELECT COUNT(*) FROM {table}").fetchone()[0]
+        row = conn.execute(
+            f"SELECT COUNT(*) AS n FROM {table} WHERE user_id = %s", (uid,)
+        ).fetchone()
+    return row["n"] if row else 0
 
 
 def get_stats() -> dict[str, int]:
@@ -223,6 +237,3 @@ def update_yesno_example(row_id: int, data: dict) -> None:
 
 def delete_yesno_example(row_id: int) -> None:
     _delete("yesno_examples", row_id)
-
-
-init_db()

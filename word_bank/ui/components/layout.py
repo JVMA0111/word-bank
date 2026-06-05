@@ -2,6 +2,7 @@
 
 import streamlit as st
 
+from word_bank.auth import logout
 from word_bank.repositories import word_bank as repo
 
 PAGES = {
@@ -67,7 +68,10 @@ def render_sidebar() -> str:
             st.metric("Total", total)
 
         st.divider()
-        st.caption("Dados salvos localmente em SQLite")
+        user_name = st.session_state.get("user_name", "")
+        st.caption(f"Conectado como **{user_name}**")
+        if st.button("Sair", use_container_width=True):
+            logout()
 
     return page
 

@@ -1,6 +1,7 @@
 SCHEMA = """
 CREATE TABLE IF NOT EXISTS verbs (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    id SERIAL PRIMARY KEY,
+    user_id TEXT NOT NULL,
     base TEXT NOT NULL,
     infinitive TEXT,
     present_participle TEXT,
@@ -10,7 +11,8 @@ CREATE TABLE IF NOT EXISTS verbs (
 );
 
 CREATE TABLE IF NOT EXISTS be_forms (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    id SERIAL PRIMARY KEY,
+    user_id TEXT NOT NULL,
     base TEXT NOT NULL,
     infinitive TEXT,
     present_participle TEXT,
@@ -20,44 +22,51 @@ CREATE TABLE IF NOT EXISTS be_forms (
 );
 
 CREATE TABLE IF NOT EXISTS adjectives (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    id SERIAL PRIMARY KEY,
+    user_id TEXT NOT NULL,
     english TEXT NOT NULL,
     portuguese TEXT
 );
 
 CREATE TABLE IF NOT EXISTS possessive_adjectives (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    id SERIAL PRIMARY KEY,
+    user_id TEXT NOT NULL,
     person TEXT NOT NULL,
     form TEXT NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS nouns (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    id SERIAL PRIMARY KEY,
+    user_id TEXT NOT NULL,
     singular TEXT NOT NULL,
     plural TEXT,
     portuguese TEXT
 );
 
 CREATE TABLE IF NOT EXISTS subject_pronouns (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    id SERIAL PRIMARY KEY,
+    user_id TEXT NOT NULL,
     person TEXT NOT NULL,
     form TEXT NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS object_pronouns (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    id SERIAL PRIMARY KEY,
+    user_id TEXT NOT NULL,
     person TEXT NOT NULL,
     form TEXT NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS possessive_pronouns (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    id SERIAL PRIMARY KEY,
+    user_id TEXT NOT NULL,
     person TEXT NOT NULL,
     form TEXT NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS tense_examples (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    id SERIAL PRIMARY KEY,
+    user_id TEXT NOT NULL,
     number INTEGER,
     simple_present TEXT,
     present_continuous TEXT,
@@ -67,7 +76,8 @@ CREATE TABLE IF NOT EXISTS tense_examples (
 );
 
 CREATE TABLE IF NOT EXISTS yesno_examples (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    id SERIAL PRIMARY KEY,
+    user_id TEXT NOT NULL,
     situation TEXT NOT NULL,
     yesno_question TEXT,
     response TEXT,

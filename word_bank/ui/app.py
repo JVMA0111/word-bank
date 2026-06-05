@@ -2,7 +2,9 @@
 
 import streamlit as st
 
+from word_bank.auth import login_form
 from word_bank.config import DEFAULT_XLSX
+from word_bank.db.connection import init_db
 from word_bank.repositories import word_bank as repo
 from word_bank.services.seed import seed_from_excel
 from word_bank.ui.components.layout import render_hero, render_sidebar
@@ -40,6 +42,11 @@ def main() -> None:
     )
 
     apply_theme()
+    init_db()
+
+    if not login_form():
+        st.stop()
+
     _bootstrap_data()
 
     page = render_sidebar()
