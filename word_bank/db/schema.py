@@ -91,6 +91,17 @@ CREATE TABLE IF NOT EXISTS yesno_examples (
     wh_question TEXT,
     statement TEXT
 );
+
+CREATE INDEX IF NOT EXISTS idx_verbs_user ON verbs (user_id);
+CREATE INDEX IF NOT EXISTS idx_be_forms_user ON be_forms (user_id);
+CREATE INDEX IF NOT EXISTS idx_adjectives_user ON adjectives (user_id);
+CREATE INDEX IF NOT EXISTS idx_possessive_adjectives_user ON possessive_adjectives (user_id);
+CREATE INDEX IF NOT EXISTS idx_nouns_user ON nouns (user_id);
+CREATE INDEX IF NOT EXISTS idx_subject_pronouns_user ON subject_pronouns (user_id);
+CREATE INDEX IF NOT EXISTS idx_object_pronouns_user ON object_pronouns (user_id);
+CREATE INDEX IF NOT EXISTS idx_possessive_pronouns_user ON possessive_pronouns (user_id);
+CREATE INDEX IF NOT EXISTS idx_tense_examples_user ON tense_examples (user_id);
+CREATE INDEX IF NOT EXISTS idx_yesno_examples_user ON yesno_examples (user_id);
 """
 
 TABLES = [
